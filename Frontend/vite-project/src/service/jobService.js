@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_BASE_URL ?? "http://localhost:5001";
+const BASE_URL = import.meta.env.VITE_BASE_URL ?? "https://job-portel-zmy0.onrender.com";
 
 export const jobService = {
   async getJobs(filters = {}) {
