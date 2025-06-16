@@ -10,18 +10,32 @@ connectDB();
 const app = express();
 app.use(express.json());
 
-// ✅ Allow Vite frontend
+// ✅ Allow both localhost and deployed Vercel frontend
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://job-portel-qknq.vercel.app'
+];
+
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 }));
 
+// ✅ Routes
 app.use('/api/jobs', jobRoute);
 
-// 404 handler
+// ✅ 404 fallback
 app.use((_, res) => res.status(404).json({ message: 'Not found' }));
 
+// ✅ Start server
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
